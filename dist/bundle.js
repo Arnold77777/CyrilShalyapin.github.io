@@ -48,7 +48,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(/*! babel-polyfill */1);
-	module.exports = __webpack_require__(/*! C:\Users\Alex\Desktop\KungFu-Viper-game-team\js\game.js */298);
+	module.exports = __webpack_require__(/*! E:\Development\HTML\data\git\CyrilShalyapin.github.io\js\game.js */298);
 
 
 /***/ },
@@ -112483,6 +112483,7 @@
 	                        this.load.image('tinystar', 'img/star2.png');
 	
 	                        this.load.audio('play', ['audio/music/play.mp3']);
+	                        this.load.audio('neon', ['audio/music/neon.mp3']);
 	                        this.load.audio('menuMusic', ['audio/music/menu.mp3']);
 	
 	                        this.load.audio('menuOver', ['audio/sound/menu-over.mp3']);
@@ -112789,6 +112790,9 @@
 	            this.pauseKey = this.game.input.keyboard.addKey(Phaser.Keyboard.ESC);
 	            this.pauseKey.onDown.add(this.pauseGame, this);
 	
+	            this.musicKey = this.game.input.keyboard.addKey(Phaser.Keyboard.M);
+	            this.musicKey.onDown.add(this.changeMusic, this);
+	
 	            this.bulletScale = 0.6;
 	            this.enemyTime = 0;
 	            this.enemyInterval = 1.5;
@@ -112796,6 +112800,7 @@
 	            this.enemyShootInterval = 1.6;
 	            this.playerShootTime = 0;
 	            this.playerShootInterval = 0.16;
+	            this.playerShootDamage = 3;
 	            this.enemyDropKillTimer = 0;
 	            this.enemyDropSpeedTimer = 0;
 	            this.enemyDropHealTimer = 0;
@@ -112828,14 +112833,18 @@
 	            this.overlay.alpha = 0.75;
 	
 	            this.music = this.game.add.audio('play');
+	            this.music2 = this.game.add.audio('neon');
 	            this.bulletHitSound = this.add.sound('bulletHit');
 	            this.enemyExplosionSound = this.add.sound('enemyExplosion');
 	            this.playerExplosionSound = this.add.sound('playerExplosion');
 	            this.gameOverSound = this.add.sound('gameOver');
 	            this.killall = this.add.sound('killall');
 	            this.speedup = this.add.sound('speedup');
-	
 	            this.music.loopFull();
+	
+	            this.game.input.onTap.add(this.changeMusic, this);
+	            this.musicSwitch = 0;
+	            console.log('Game started!');
 	        }
 	    }, {
 	        key: 'update',
@@ -113085,10 +113094,9 @@
 	
 	            this.enemyDropKillTimer++;
 	            if (this.enemyDropKillTimer === 3) {
-	                var shooterList = this.enemies.children.filter(function (enemy) {
+	                var shooter = this.enemies.children.filter(function (enemy) {
 	                    return enemy.position.y < _this6.game.world.height / 2;
-	                });
-	                var shooter = shooterList[this.game.rnd.integerInRange(0, shooterList.length - 1)];
+	                })[0];
 	                shooter.killDrop();
 	                this.enemyDropKillTimer = 0;
 	            }
@@ -113101,10 +113109,9 @@
 	            this.enemyDropSpeedTimer++;
 	            if (this.enemyDropSpeedTimer === 7) {
 	                this.enemyDropSpeedCounter++;
-	                var shooterList = this.enemies.children.filter(function (enemy) {
+	                var shooter = this.enemies.children.filter(function (enemy) {
 	                    return enemy.position.y < _this7.game.world.height / 2;
-	                });
-	                var shooter = shooterList[this.game.rnd.integerInRange(0, shooterList.length - 1)];
+	                })[0];
 	                shooter.speedDrop();
 	                this.enemyDropSpeedTimer = 0;
 	            }
@@ -113115,12 +113122,13 @@
 	            var _this8 = this;
 	
 	            this.enemyDropHealTimer++;
+	            console.log(this.enemyDropHealTimer);
 	            if (this.enemyDropHealTimer > 1) {
-	                var shooterList = this.enemies.children.filter(function (enemy) {
+	                var shooter = this.enemies.children.filter(function (enemy) {
 	                    return enemy.position.y < _this8.game.world.height / 2;
-	                });
-	                var shooter = shooterList[this.game.rnd.integerInRange(0, shooterList.length - 1)];
+	                })[0];
 	                shooter.healDrop();
+	                console.log(this.player.health);
 	                this.enemyDropHealTimer = 0;
 	            }
 	        }
@@ -113131,10 +113139,9 @@
 	
 	            this.enemyDropPowerTimer++;
 	            if (this.enemyDropPowerTimer === 17) {
-	                var shooterList = this.enemies.children.filter(function (enemy) {
+	                var shooter = this.enemies.children.filter(function (enemy) {
 	                    return enemy.position.y < _this9.game.world.height / 2;
-	                });
-	                var shooter = shooterList[this.game.rnd.integerInRange(0, shooterList.length - 1)];
+	                })[0];
 	                shooter.powerDrop();
 	                this.enemyDropPowerTimer = 0;
 	                if (this.enemyInterval > 0) {
@@ -113159,6 +113166,22 @@
 	                } else {
 	                    this.pauseText.destroy();
 	                    this.game.paused = false;
+	                }
+	            }
+	        }
+	    }, {
+	        key: 'changeMusic',
+	        value: function changeMusic(pointer, doubleTap) {
+	            console.log('Music is about to change.');
+	            if (doubleTap) {
+	                console.log('Music changed!');
+	                this.musicSwitch++;
+	                if (this.musicSwitch % 2) {
+	                    this.music.stop();
+	                    this.music2.play();
+	                } else {
+	                    this.music2.stop();
+	                    this.music.play();
 	                }
 	            }
 	        }
