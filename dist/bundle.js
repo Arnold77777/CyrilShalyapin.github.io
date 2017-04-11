@@ -112844,7 +112844,6 @@
 	
 	            this.game.input.onTap.add(this.changeMusic, this);
 	            this.musicSwitch = 0;
-	            console.log('Game started!');
 	        }
 	    }, {
 	        key: 'update',
@@ -113172,9 +113171,7 @@
 	    }, {
 	        key: 'changeMusic',
 	        value: function changeMusic(pointer, doubleTap) {
-	            console.log('Music is about to change.');
 	            if (doubleTap) {
-	                console.log('Music changed!');
 	                this.musicSwitch++;
 	                if (this.musicSwitch % 2) {
 	                    this.music.stop();
