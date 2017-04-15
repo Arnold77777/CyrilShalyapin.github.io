@@ -112842,6 +112842,7 @@
 	            this.speedup = this.add.sound('speedup');
 	            this.music.loopFull();
 	            this.music2.loopFull();
+	            this.music2.stop();
 	
 	            this.game.input.onTap.add(this.changeMusic, this);
 	            this.musicSwitch = 0;
